@@ -4,6 +4,7 @@ import { areaChart, lineChart } from "./charts.js";
 const NF0 = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 const NF1 = new Intl.NumberFormat("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const NF2 = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const MINUS = "\u2212";
 
 const byCode = new Map(INDICATORS.map((indicator) => [indicator.code, indicator]));
 
@@ -24,20 +25,26 @@ function numberText(indicator) {
       return NF1.format(value);
     case "EG.ELC.RNEW.ZS":
       return `${NF2.format(value)}%`;
-    default:
-      return `${NF1.format(value)}%`;
+    default: {
+      const text = NF1.format(value).replace("-", MINUS);
+      return `${text}%`;
+    }
   }
 }
 
 function unitText(indicator) {
+  if (indicator.code === "NY.GDP.MKTP.CD" || indicator.code === "NY.GDP.PCAP.CD") return "current prices";
   if (indicator.unit.startsWith("%")) return indicator.unit.replace(/^%\s*/, "");
   return indicator.unit;
 }
 
 function tableText(indicator) {
-  if (indicator.code === "SP.POP.TOTL") return `${numberText(indicator)} people`;
-  if (indicator.code === "SP.DYN.LE00.IN") return `${numberText(indicator)} years`;
-  return numberText(indicator);
+  const text = numberText(indicator);
+  if (indicator.code === "SP.POP.TOTL") return `${text} people`;
+  if (indicator.code === "SP.DYN.LE00.IN") return `${text} years`;
+  if (indicator.code === "SP.DYN.TFRT.IN") return `${text} births per woman`;
+  if (indicator.code === "SI.POV.GINI") return `${text} index (0 to 100)`;
+  return text;
 }
 
 function makeElement(tag, className, text) {
@@ -98,26 +105,58 @@ renderAll("#economy-cards", ["NY.GDP.MKTP.CD", "NY.GDP.MKTP.KD.ZG", "NY.GDP.PCAP
 renderAll("#society-cards", ["SP.POP.TOTL", "SP.POP.GROW", "SP.POP.65UP.TO.ZS", "SP.URB.TOTL.IN.ZS", "SP.DYN.TFRT.IN", "IT.NET.USER.ZS", "SH.XPD.CHEX.GD.ZS", "SE.XPD.TOTL.GD.ZS", "SI.POV.GINI"].map((code) => byCode.get(code)), renderCard);
 renderAll("#energy-figures", ["EG.ELC.RNEW.ZS", "EG.FEC.RNEW.ZS", "AG.LND.FRST.ZS"].map((code) => byCode.get(code)), renderEnergy);
 
-document.querySelector("#population-chart").innerHTML = areaChart(SERIES.population, {
-  height: 260,
-  unit: "PEOPLE",
-  label: "Population of Iceland, 1960 to 2024",
-  format: (value) => NF0.format(value),
+const chartConfigs = [
+  {
+    mount: "#population-chart",
+    draw: (width) => areaChart(SERIES.population, {
+      width,
+      height: width < 560 ? 200 : 230,
+      unit: "PEOPLE",
+      label: "Population of Iceland, 1960 to 2024",
+      yearTicks: [1960, 2024],
+      format: (value) => NF0.format(value),
+    }),
+  },
+  {
+    mount: "#gdp-chart",
+    draw: (width) => lineChart(SERIES.gdpPerCapita, {
+      width,
+      height: width < 560 ? 210 : 240,
+      unit: "US$",
+      label: "GDP per capita in Iceland, 1995 to 2024",
+      yearTicks: [1995, 2005, 2015, 2024],
+      format: (value) => `$${NF0.format(value)}`,
+    }),
+  },
+  {
+    mount: "#life-chart",
+    draw: (width) => lineChart(SERIES.lifeExpectancy, {
+      width,
+      height: width < 560 ? 190 : 230,
+      unit: "YEARS",
+      label: "Life expectancy at birth in Iceland, 1960 to 2024",
+      yearTicks: [1960, 1980, 2000, 2024],
+      format: (value) => NF1.format(value),
+    }),
+  },
+];
+
+function renderCharts() {
+  chartConfigs.forEach(({ mount, draw }) => {
+    const container = document.querySelector(mount);
+    if (!container) return;
+    const width = Math.max(260, Math.round(container.clientWidth));
+    container.innerHTML = draw(width);
+  });
+}
+
+let resizeTimer;
+window.addEventListener("resize", () => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(renderCharts, 150);
 });
 
-document.querySelector("#gdp-chart").innerHTML = lineChart(SERIES.gdpPerCapita, {
-  height: 220,
-  unit: "US$ PER PERSON",
-  label: "GDP per capita in Iceland, 1995 to 2024",
-  format: (value) => `$${NF0.format(value)}`,
-});
-
-document.querySelector("#life-chart").innerHTML = lineChart(SERIES.lifeExpectancy, {
-  height: 220,
-  unit: "YEARS",
-  label: "Life expectancy at birth in Iceland, 1960 to 2024",
-  format: (value) => NF1.format(value),
-});
+renderCharts();
 
 const methodsBody = document.querySelector("#methods-body");
 const methodRows = INDICATORS.map((indicator) => {

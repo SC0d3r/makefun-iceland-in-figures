@@ -42,9 +42,15 @@ function valueBounds(points, zeroBased) {
 }
 
 function plot(points, options) {
-  const width = 720;
+  const width = Math.max(260, Math.round(options.width ?? 720));
   const height = options.height ?? 220;
-  const margin = { left: 58, right: 20, top: 24, bottom: 34 };
+  const narrow = width < 480;
+  const margin = {
+    left: narrow ? 46 : 58,
+    right: options.kind === "line" ? (narrow ? 20 : 46) : (narrow ? 14 : 20),
+    top: narrow ? 22 : 24,
+    bottom: narrow ? 30 : 34,
+  };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const [minY, maxY] = valueBounds(points, options.kind === "area");
@@ -61,6 +67,12 @@ function plot(points, options) {
     ? `M0 ${plotHeight.toFixed(2)} L${coordinates.map(([x, y]) => `${x.toFixed(2)} ${y.toFixed(2)}`).join(" L")} L${plotWidth.toFixed(2)} ${plotHeight.toFixed(2)} Z`
     : "";
 
+  const tickFont = narrow ? 9.5 : 11;
+  const yearFont = narrow ? 10 : 11.5;
+  const endpointFont = narrow ? 10.5 : 13;
+  const dotRadius = narrow ? 4.2 : 5.4;
+  const lineWidth = options.kind === "line" ? 2.6 : 2.2;
+
   const gridlines = [0.25, 0.5, 0.75, 1].map((fraction) => {
     const y = margin.top + fraction * plotHeight;
     return `<line x1="${margin.left}" y1="${y.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${y.toFixed(2)}" stroke="${COLORS.rule}" stroke-width="1" />`;
@@ -69,28 +81,33 @@ function plot(points, options) {
   const yLabels = [0.25, 0.5, 0.75, 1].map((fraction) => {
     const value = maxY - fraction * (maxY - minY);
     const y = margin.top + fraction * plotHeight;
-    return `<text x="${margin.left - 8}" y="${(y + 3.5).toFixed(2)}" text-anchor="end" font-size="10" fill="${COLORS.muted}">${escapeXml(options.format ? options.format(value) : value)}</text>`;
+    return `<text x="${margin.left - 8}" y="${(y + 3.5).toFixed(2)}" text-anchor="end" font-size="${tickFont}" fill="${COLORS.muted}">${escapeXml(options.format ? options.format(value) : value)}</text>`;
   }).join("");
 
   const [lastX, lastY] = coordinates[coordinates.length - 1];
   const lastValue = points[points.length - 1][1];
   const lastLabel = escapeXml(options.format ? options.format(lastValue) : lastValue);
   const baseline = margin.top + plotHeight;
+  const yearTicks = options.yearTicks ?? [minYear, maxYear];
+  const yearLabels = yearTicks.map((year, index) => {
+    const x = margin.left + xFor(year);
+    const anchor = index === 0 ? "start" : index === yearTicks.length - 1 ? "end" : "middle";
+    return `<text x="${x.toFixed(2)}" y="${height - 8}" text-anchor="${anchor}" font-size="${yearFont}" fill="${COLORS.muted}">${year}</text>`;
+  }).join("");
 
   const plotMarkup = options.kind === "area"
-    ? `<path d="${areaPath}" fill="${COLORS.glacier}" fill-opacity="0.14" /><path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />`
-    : `<path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />`;
+    ? `<path d="${areaPath}" fill="${COLORS.glacier}" fill-opacity="0.14" /><path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="${lineWidth}" stroke-linejoin="round" stroke-linecap="round" />`
+    : `<path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="${lineWidth}" stroke-linejoin="round" stroke-linecap="round" />`;
 
   return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(options.label ?? "Chart")}">
-  <text x="${margin.left}" y="12" font-size="10" letter-spacing="0.12em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
+  <text x="${margin.left - 8}" y="${(margin.top + 3.5).toFixed(2)}" text-anchor="end" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
   ${gridlines}
   <line x1="${margin.left}" y1="${baseline.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${baseline.toFixed(2)}" stroke="${COLORS.ink}" stroke-width="1" opacity="0.65" />
   <svg x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" viewBox="0 0 ${plotWidth} ${plotHeight}" preserveAspectRatio="none" aria-hidden="true">${plotMarkup}</svg>
   ${yLabels}
-  <text x="${(lastX + margin.left - 6).toFixed(2)}" y="${(lastY + margin.top - 9).toFixed(2)}" text-anchor="end" font-size="11" font-weight="600" fill="${COLORS.ink}">${lastLabel}</text>
-  <circle cx="${(lastX + margin.left).toFixed(2)}" cy="${(lastY + margin.top).toFixed(2)}" r="3.6" fill="${COLORS.lava}" stroke="${COLORS.paper}" stroke-width="1.5" />
-  <text x="${margin.left}" y="${height - 10}" font-size="10.5" fill="${COLORS.muted}">${minYear}</text>
-  <text x="${margin.left + plotWidth}" y="${height - 10}" text-anchor="end" font-size="10.5" fill="${COLORS.muted}">${maxYear}</text>
+  <text x="${(lastX + margin.left - 8).toFixed(2)}" y="${(lastY + margin.top - 12).toFixed(2)}" text-anchor="end" font-size="${endpointFont}" font-weight="600" fill="${COLORS.ink}">${lastLabel}</text>
+  <circle cx="${(lastX + margin.left).toFixed(2)}" cy="${(lastY + margin.top).toFixed(2)}" r="${dotRadius}" fill="${COLORS.lava}" stroke="${COLORS.paper}" stroke-width="1.5" />
+  ${yearLabels}
 </svg>`;
 }
 

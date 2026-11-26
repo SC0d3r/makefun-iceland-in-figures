@@ -18,6 +18,7 @@
         <nav class="site-nav" aria-label="Sections">
           <a href="#economy">Economy</a>
           <a href="#society">Society</a>
+          <a href="#energy">Energy</a>
           <a href="#data">Data</a>
           <a href="#methods">Methods</a>
         </nav>
@@ -53,7 +54,7 @@
           <span class="section-number">02</span>
           <div>
             <h2>Economy</h2>
-            <p class="section-intro">Output and prices in a small, open economy, measured in current US dollars.</p>
+            <p class="section-intro">Output, prices and jobs in a small, open economy, each series dated and sourced.</p>
           </div>
         </div>
         <div class="economy-grid">
@@ -64,9 +65,28 @@
             </div>
             <div id="gdp-chart" class="chart"></div>
             <p class="chart-note">GDP per capita rose from $27,565 in 1995 to $85,863 in 2024, not adjusted for inflation.</p>
+            <p class="chart-source">Source: World Bank WDI, NY.GDP.PCAP.CD, extracted 26 November 2026.</p>
+            <div class="series-notes" aria-label="Series notes">
+              <div class="series-note">
+                <span class="series-year">2008</span>
+                <span class="series-value">$57,489</span>
+                <span class="series-text">Down from $70,483 in 2007.</span>
+              </div>
+              <div class="series-note">
+                <span class="series-year">2009</span>
+                <span class="series-value">$41,484</span>
+                <span class="series-text">Down from $57,489 in 2008.</span>
+              </div>
+              <div class="series-note">
+                <span class="series-year">2020</span>
+                <span class="series-value">$60,128</span>
+                <span class="series-text">Down from $69,296 in 2019.</span>
+              </div>
+            </div>
           </div>
           <div id="economy-cards" class="cards cards-2" aria-label="Economy indicators"></div>
         </div>
+        <p class="section-foot">Source: World Bank WDI, NY.GDP.PCAP.CD and related series, extracted 26 November 2026. Dollar values are in current prices; percentages are as labelled.</p>
       </div>
     </section>
 
@@ -128,6 +148,7 @@
             <tbody id="data-body"></tbody>
           </table>
         </div>
+        <p class="data-foot">19 indicators, World Bank WDI, latest observation per series, extracted 26 November 2026.</p>
       </div>
     </section>
 
