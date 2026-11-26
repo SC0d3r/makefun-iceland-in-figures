@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iceland in Figures</title>
+  <meta name="description" content="An independent statistical digest of Iceland: population, economy, society and energy, with every figure dated and sourced.">
+  <meta name="theme-color" content="#f3f0e8">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header id="header" class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="#overview">Iceland in Figures</a>
+      <div class="header-right">
+        <span class="release">Release 26.11.2026</span>
+        <nav class="site-nav" aria-label="Sections">
+          <a href="#economy">Economy</a>
+          <a href="#society">Society</a>
+          <a href="#data">Data</a>
+          <a href="#methods">Methods</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="overview" class="section overview">
+      <div class="wrap">
+        <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>National statistics digest</p>
+        <h1>Iceland in Figures</h1>
+        <p class="dek">A statistical portrait of a small North Atlantic nation: its people, economy, society and energy, each figure dated and sourced.</p>
+        <div id="hero-figures" class="kpi-row" aria-label="Headline figures"></div>
+
+        <figure class="population-figure">
+          <div class="figure-head">
+            <span class="figure-title">Population, 1960&ndash;2024</span>
+            <span class="figure-source">World Bank WDI &middot; SP.POP.TOTL</span>
+          </div>
+          <div id="population-chart" class="chart chart-wide"></div>
+          <figcaption class="figure-caption">
+            <span>The population grew by about 120 percent in sixty-four years, from 175,574 in 1960 to 386,506 in 2024.</span>
+            <span class="figure-note">Area chart &middot; five-year steps to 2020, then 2024</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="economy" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-number">02</span>
+          <div>
+            <h2>Economy</h2>
+            <p class="section-intro">Output and prices in a small, open economy, measured in current US dollars.</p>
+          </div>
+        </div>
+        <div class="economy-grid">
+          <div class="chart-col">
+            <div class="figure-head">
+              <span class="figure-title">GDP per capita, 1995&ndash;2024</span>
+              <span class="figure-source">World Bank WDI &middot; NY.GDP.PCAP.CD</span>
+            </div>
+            <div id="gdp-chart" class="chart"></div>
+            <p class="chart-note">GDP per capita rose from $27,565 in 1995 to $85,863 in 2024, not adjusted for inflation.</p>
+          </div>
+          <div id="economy-cards" class="cards cards-2" aria-label="Economy indicators"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="society" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-number">03</span>
+          <div>
+            <h2>Society</h2>
+            <p class="section-intro">How Icelanders live: longer, older, more urban and almost entirely online.</p>
+          </div>
+        </div>
+        <div class="society-chart">
+          <div class="figure-head">
+            <span class="figure-title">Life expectancy at birth, 1960&ndash;2024</span>
+            <span class="figure-source">World Bank WDI &middot; SP.DYN.LE00.IN</span>
+          </div>
+          <div id="life-chart" class="chart"></div>
+          <p class="chart-note">Life expectancy rose from 74.0 years in 1960 to 82.8 years in 2024.</p>
+        </div>
+        <div id="society-cards" class="cards cards-3" aria-label="Society indicators"></div>
+      </div>
+    </section>
+
+    <section id="energy" class="energy-band">
+      <div class="wrap energy-inner">
+        <div class="energy-copy">
+          <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>Energy and environment</p>
+          <h2 class="band-title">A renewable grid, a bare landscape.</h2>
+          <p>Electricity is almost entirely renewable, while forest cover remains below one percent of the land.</p>
+        </div>
+        <div id="energy-figures" class="energy-figures"></div>
+      </div>
+    </section>
+
+    <section id="data" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-number">04</span>
+          <div>
+            <h2>Data</h2>
+            <p class="section-intro">Nineteen indicators, latest available observation per series.</p>
+          </div>
+        </div>
+        <div class="data-tools">
+          <input id="filter" type="search" placeholder="Filter indicators" aria-label="Filter indicators" autocomplete="off" spellcheck="false">
+          <p id="count" class="count" aria-live="polite">Showing 19 of 19 indicators</p>
+        </div>
+        <div class="table-wrap">
+          <table id="data-table" class="data-table">
+            <thead>
+              <tr>
+                <th scope="col" data-key="name" aria-sort="none"><button type="button" data-sort="name">Indicator <span class="arrow" aria-hidden="true"></span></button></th>
+                <th scope="col" data-key="group" class="col-group" aria-sort="none"><button type="button" data-sort="group">Group <span class="arrow" aria-hidden="true"></span></button></th>
+                <th scope="col" data-key="value" class="num" aria-sort="none"><button type="button" data-sort="value">Latest value <span class="arrow" aria-hidden="true"></span></button></th>
+                <th scope="col" data-key="year" class="num" aria-sort="none"><button type="button" data-sort="year">Year <span class="arrow" aria-hidden="true"></span></button></th>
+              </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="methods" class="section methods">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="section-number">05</span>
+          <div>
+            <h2>Methods and sources</h2>
+            <p class="section-intro">One source, one vintage, no adjustments.</p>
+          </div>
+        </div>
+        <div class="methods-grid">
+          <div class="methods-note">
+            <p>All figures are the latest available World Bank World Development Indicators observations for Iceland, extracted on 26 November 2026. Each figure names its year; national sources may use different definitions and vintages. Values are shown rounded, never adjusted.</p>
+            <p>Source: <a href="https://data.worldbank.org/country/ISL">https://data.worldbank.org/country/ISL</a></p>
+          </div>
+          <div class="methods-table-wrap">
+            <table class="methods-table">
+              <thead>
+                <tr><th scope="col">Code</th><th scope="col">Series</th></tr>
+              </thead>
+              <tbody id="methods-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>ICELAND IN FIGURES &middot; An independent statistical digest &middot; Data: World Bank WDI &middot; Released 26 November 2026</p>
+      <a href="https://data.worldbank.org/country/ISL">Source</a>
+    </div>
+  </footer>
+</body>
+</html>
