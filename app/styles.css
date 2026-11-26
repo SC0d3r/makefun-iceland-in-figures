@@ -3,7 +3,7 @@
   --panel: #faf8f2;
   --ink: #171a1f;
   --basalt: #343a43;
-  --muted: #6f6a5f;
+  --muted: #5c574c;
   --rule: #d9d3c5;
   --glacier: #2f6f86;
   --lava: #a8432a;
@@ -105,7 +105,7 @@ a {
   padding-right: 18px;
   border-right: 1px solid var(--rule);
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -121,7 +121,7 @@ a {
   padding: 4px 0;
   border-bottom: 1px solid transparent;
   color: var(--ink);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -200,7 +200,7 @@ h1 {
 
 .kpi {
   min-width: 0;
-  padding: 16px 26px 15px;
+  padding: 16px 29px 15px 26px;
   border-right: 1px solid var(--rule);
 }
 
@@ -216,10 +216,14 @@ h1 {
 .kpi-label {
   display: block;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.kpi-label-short {
+  display: none;
 }
 
 .kpi-value {
@@ -233,7 +237,7 @@ h1 {
 }
 
 .kpi-unit {
-  margin-left: 7px;
+  margin-left: 10px;
   color: var(--muted);
   font-family: var(--sans);
   font-size: 12px;
@@ -244,7 +248,7 @@ h1 {
 .kpi-source {
   display: block;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -273,7 +277,7 @@ h1 {
 
 .figure-source {
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
@@ -313,7 +317,7 @@ h1 {
 
 .figure-note {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   text-align: right;
   white-space: nowrap;
 }
@@ -389,14 +393,23 @@ h2 {
 .chart-source {
   margin-top: 6px;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
   line-height: 1.4;
+}
+
+.series-heading {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .series-notes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 14px;
+  margin-top: 4px;
   border-top: 1px solid var(--ink);
 }
 
@@ -439,7 +452,7 @@ h2 {
   padding-top: 9px;
   border-top: 1px solid var(--rule);
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.04em;
   line-height: 1.4;
 }
@@ -475,7 +488,7 @@ h2 {
 .card-label {
   min-height: 26px;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.1em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -490,10 +503,14 @@ h2 {
   white-space: nowrap;
 }
 
+.cards-2 .card-value {
+  font-size: 28px;
+}
+
 .card-unit {
   margin-top: 4px;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
 }
 
 .card-meta {
@@ -503,7 +520,7 @@ h2 {
   margin-top: auto;
   padding-top: 10px;
   color: var(--muted);
-  font-size: 9.5px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -655,19 +672,23 @@ h2 {
 }
 
 #data-table th[data-key="name"] {
-  width: 40%;
+  width: 30%;
 }
 
 #data-table th[data-key="group"] {
-  width: 16%;
+  width: 12%;
 }
 
 #data-table th[data-key="value"] {
+  width: 16%;
+}
+
+#data-table th[data-key="unit"] {
   width: 28%;
 }
 
 #data-table th[data-key="year"] {
-  width: 16%;
+  width: 14%;
 }
 
 .data-table th {
@@ -719,6 +740,13 @@ h2 {
   white-space: nowrap;
 }
 
+.data-table td.unit {
+  padding-left: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-align: left;
+}
+
 .data-table td.empty {
   padding: 14px 10px;
   color: var(--muted);
@@ -740,7 +768,7 @@ h2 {
   padding-top: 8px;
   border-top: 1px solid var(--ink);
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.04em;
   line-height: 1.4;
 }
@@ -982,15 +1010,19 @@ h2 {
   }
 
   #data-table th[data-key="name"] {
-    width: 46%;
+    width: 40%;
   }
 
   #data-table th[data-key="value"] {
-    width: 36%;
+    width: 20%;
+  }
+
+  #data-table th[data-key="unit"] {
+    width: 26%;
   }
 
   #data-table th[data-key="year"] {
-    width: 18%;
+    width: 14%;
   }
 
   .data-tools {
@@ -1065,14 +1097,23 @@ h2 {
 
   .kpi-label {
     min-height: 23px;
-    font-size: 9px;
+    font-size: 9.5px;
     letter-spacing: 0.08em;
     line-height: 1.25;
   }
 
+  .kpi-label-full {
+    display: none;
+  }
+
+  .kpi-label-short {
+    display: inline;
+  }
+
   .kpi-value {
     margin: 4px 0 1px;
-    font-size: 29px;
+    padding-right: 4px;
+    font-size: 27px;
     letter-spacing: -0.04em;
   }
 

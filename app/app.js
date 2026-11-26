@@ -38,15 +38,6 @@ function unitText(indicator) {
   return indicator.unit;
 }
 
-function tableText(indicator) {
-  const text = numberText(indicator);
-  if (indicator.code === "SP.POP.TOTL") return `${text} people`;
-  if (indicator.code === "SP.DYN.LE00.IN") return `${text} years`;
-  if (indicator.code === "SP.DYN.TFRT.IN") return `${text} births per woman`;
-  if (indicator.code === "SI.POV.GINI") return `${text} index (0 to 100)`;
-  return text;
-}
-
 function makeElement(tag, className, text) {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -59,8 +50,17 @@ function renderKpi(indicator) {
   const value = makeElement("span", "kpi-value");
   value.append(document.createTextNode(numberText(indicator)));
   value.append(makeElement("span", "kpi-unit", unitText(indicator)));
+  const label = makeElement("span", "kpi-label");
+  if (indicator.code === "SP.DYN.LE00.IN") {
+    label.append(
+      makeElement("span", "kpi-label-full", indicator.name),
+      makeElement("span", "kpi-label-short", "Life expectancy"),
+    );
+  } else {
+    label.textContent = indicator.name;
+  }
   item.append(
-    makeElement("span", "kpi-label", indicator.name),
+    label,
     value,
     makeElement("span", "kpi-source", `World Bank WDI \u00b7 ${indicator.year}`),
   );
@@ -201,7 +201,8 @@ function renderTable() {
     row.append(
       makeElement("td", "", indicator.name),
       makeElement("td", "group", indicator.group),
-      makeElement("td", "num", tableText(indicator)),
+      makeElement("td", "num", numberText(indicator)),
+      makeElement("td", "unit", indicator.unit),
       makeElement("td", "num", String(indicator.year)),
     );
     fragment.append(row);
@@ -210,7 +211,7 @@ function renderTable() {
   if (rows.length === 0) {
     const row = document.createElement("tr");
     const cell = makeElement("td", "empty", `No indicators match "${state.query.trim()}".`);
-    cell.colSpan = 4;
+    cell.colSpan = 5;
     row.append(cell);
     fragment.append(row);
   }

@@ -2,7 +2,7 @@
 const COLORS = {
   glacier: "#2f6f86",
   lava: "#a8432a",
-  rule: "#d9d3c5",
+  rule: "#c9c1b0",
   muted: "#6f6a5f",
   ink: "#171a1f",
   paper: "#f3f0e8",
@@ -46,9 +46,9 @@ function plot(points, options) {
   const height = options.height ?? 220;
   const narrow = width < 480;
   const margin = {
-    left: narrow ? 46 : 58,
-    right: options.kind === "line" ? (narrow ? 20 : 46) : (narrow ? 14 : 20),
-    top: narrow ? 22 : 24,
+    left: narrow ? 66 : 70,
+    right: options.kind === "line" ? (narrow ? 22 : 46) : (narrow ? 14 : 20),
+    top: narrow ? 24 : 26,
     bottom: narrow ? 30 : 34,
   };
   const plotWidth = width - margin.left - margin.right;
@@ -67,18 +67,18 @@ function plot(points, options) {
     ? `M0 ${plotHeight.toFixed(2)} L${coordinates.map(([x, y]) => `${x.toFixed(2)} ${y.toFixed(2)}`).join(" L")} L${plotWidth.toFixed(2)} ${plotHeight.toFixed(2)} Z`
     : "";
 
-  const tickFont = narrow ? 9.5 : 11;
-  const yearFont = narrow ? 10 : 11.5;
-  const endpointFont = narrow ? 10.5 : 13;
-  const dotRadius = narrow ? 4.2 : 5.4;
-  const lineWidth = options.kind === "line" ? 2.6 : 2.2;
+  const tickFont = 12.5;
+  const yearFont = 12.5;
+  const endpointFont = 14.5;
+  const dotRadius = 6;
+  const lineWidth = 3;
 
-  const gridlines = [0.25, 0.5, 0.75, 1].map((fraction) => {
+  const gridlines = [0, 0.25, 0.5, 0.75].map((fraction) => {
     const y = margin.top + fraction * plotHeight;
-    return `<line x1="${margin.left}" y1="${y.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${y.toFixed(2)}" stroke="${COLORS.rule}" stroke-width="1" />`;
+    return `<line x1="${margin.left}" y1="${y.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${y.toFixed(2)}" stroke="${COLORS.rule}" stroke-width="1.2" />`;
   }).join("");
 
-  const yLabels = [0.25, 0.5, 0.75, 1].map((fraction) => {
+  const yLabels = [0, 0.25, 0.5, 0.75, 1].map((fraction) => {
     const value = maxY - fraction * (maxY - minY);
     const y = margin.top + fraction * plotHeight;
     return `<text x="${margin.left - 8}" y="${(y + 3.5).toFixed(2)}" text-anchor="end" font-size="${tickFont}" fill="${COLORS.muted}">${escapeXml(options.format ? options.format(value) : value)}</text>`;
@@ -100,7 +100,7 @@ function plot(points, options) {
     : `<path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="${lineWidth}" stroke-linejoin="round" stroke-linecap="round" />`;
 
   return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(options.label ?? "Chart")}">
-  <text x="${margin.left - 8}" y="${(margin.top + 3.5).toFixed(2)}" text-anchor="end" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
+  <text x="${margin.left}" y="${margin.top - 6}" text-anchor="start" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
   ${gridlines}
   <line x1="${margin.left}" y1="${baseline.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${baseline.toFixed(2)}" stroke="${COLORS.ink}" stroke-width="1" opacity="0.65" />
   <svg x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" viewBox="0 0 ${plotWidth} ${plotHeight}" preserveAspectRatio="none" aria-hidden="true">${plotMarkup}</svg>

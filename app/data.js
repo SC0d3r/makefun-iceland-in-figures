@@ -11,7 +11,7 @@ export const INDICATORS = [
   { code: "NY.GDP.MKTP.KD.ZG", name: "GDP growth", value: -1.282876444, year: 2024, unit: "% a year", group: "Economy" },
   { code: "FP.CPI.TOTL.ZG", name: "Inflation", value: 5.8568385, year: 2024, unit: "% a year", group: "Economy" },
   { code: "SL.UEM.TOTL.ZS", name: "Unemployment", value: 3.6, year: 2024, unit: "% of labour force", group: "Economy" },
-  { code: "NE.TRD.GNFS.ZS", name: "Trade", value: 86.18157928, year: 2024, unit: "% of GDP", group: "Economy" },
+  { code: "NE.TRD.GNFS.ZS", name: "Trade openness", value: 86.18157928, year: 2024, unit: "% of GDP", group: "Economy" },
   { code: "EG.ELC.RNEW.ZS", name: "Renewable electricity", value: 99.99363881, year: 2016, unit: "% of electricity", group: "Energy" },
   { code: "EG.FEC.RNEW.ZS", name: "Renewable energy use", value: 82.4, year: 2021, unit: "% of final energy", group: "Energy" },
   { code: "AG.LND.FRST.ZS", name: "Forest cover", value: 0.600218189, year: 2024, unit: "% of land", group: "Environment" },
