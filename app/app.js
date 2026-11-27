@@ -113,6 +113,8 @@ const chartConfigs = [
       height: width < 560 ? 200 : 230,
       unit: "PEOPLE",
       label: "Population of Iceland, 1960 to 2024",
+      yMax: 420000,
+      yTicks: [0, 100000, 200000, 300000, 400000],
       yearTicks: [1960, 2024],
       format: (value) => NF0.format(value),
     }),
@@ -123,6 +125,7 @@ const chartConfigs = [
       width,
       height: width < 560 ? 210 : 240,
       unit: "US$",
+      unitAlign: "axis",
       label: "GDP per capita in Iceland, 1995 to 2024",
       yearTicks: [1995, 2005, 2015, 2024],
       format: (value) => `$${NF0.format(value)}`,
@@ -184,7 +187,6 @@ function updateHeaders() {
   headers.forEach((header) => {
     const active = header.dataset.key === state.key;
     header.setAttribute("aria-sort", active ? (state.direction === 1 ? "ascending" : "descending") : "none");
-    header.querySelector(".arrow").textContent = active ? (state.direction === 1 ? "\u2191" : "\u2193") : "";
   });
 }
 

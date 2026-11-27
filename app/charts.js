@@ -3,6 +3,7 @@ const COLORS = {
   glacier: "#2f6f86",
   lava: "#a8432a",
   rule: "#bdb4a1",
+  lineGrid: "#b0a68f",
   muted: "#6f6a5f",
   ink: "#171a1f",
   paper: "#f3f0e8",
@@ -53,7 +54,9 @@ function plot(points, options) {
   };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
-  const [minY, maxY] = valueBounds(points, options.kind === "area");
+  const [minBound, maxBound] = valueBounds(points, options.kind === "area");
+  const minY = options.yMin ?? minBound;
+  const maxY = options.yMax ?? maxBound;
   const years = points.map((point) => point[0]);
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
@@ -73,14 +76,16 @@ function plot(points, options) {
   const dotRadius = 6;
   const lineWidth = 3;
 
-  const gridlines = [0, 0.25, 0.5, 0.75].map((fraction) => {
-    const y = margin.top + fraction * plotHeight;
-    return `<line x1="${margin.left}" y1="${y.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${y.toFixed(2)}" stroke="${COLORS.rule}" stroke-width="1.2" />`;
+  const gridColor = options.kind === "line" ? COLORS.lineGrid : COLORS.rule;
+  const yTickValues = options.yTicks ?? [0, 0.25, 0.5, 0.75, 1].map((fraction) => maxY - fraction * (maxY - minY));
+  const gridValues = yTickValues.filter((value) => value > minY + 1e-9);
+  const gridlines = gridValues.map((value) => {
+    const y = margin.top + yFor(value);
+    return `<line x1="${margin.left}" y1="${y.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${y.toFixed(2)}" stroke="${gridColor}" stroke-width="1.2" />`;
   }).join("");
 
-  const yLabels = [0, 0.25, 0.5, 0.75, 1].map((fraction) => {
-    const value = maxY - fraction * (maxY - minY);
-    const y = margin.top + fraction * plotHeight;
+  const yLabels = yTickValues.map((value) => {
+    const y = margin.top + yFor(value);
     return `<text x="${margin.left - 8}" y="${(y + 3.5).toFixed(2)}" text-anchor="end" font-size="${tickFont}" fill="${COLORS.muted}">${escapeXml(options.format ? options.format(value) : value)}</text>`;
   }).join("");
 
@@ -106,8 +111,12 @@ function plot(points, options) {
     ? `<path d="${areaPath}" fill="${COLORS.glacier}" fill-opacity="0.14" /><path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="${lineWidth}" stroke-linejoin="round" stroke-linecap="round" />`
     : `<path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="${lineWidth}" stroke-linejoin="round" stroke-linecap="round" />`;
 
+  const unitLabel = options.unitAlign === "axis"
+    ? `<text x="${margin.left - 8}" y="${margin.top - 14}" text-anchor="end" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>`
+    : `<text x="${(margin.left + plotWidth).toFixed(2)}" y="${margin.top - 6}" text-anchor="end" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>`;
+
   return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(options.label ?? "Chart")}">
-  <text x="${(margin.left + plotWidth).toFixed(2)}" y="${margin.top - 6}" text-anchor="end" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
+  ${unitLabel}
   ${gridlines}
   <line x1="${margin.left}" y1="${baseline.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${baseline.toFixed(2)}" stroke="${COLORS.ink}" stroke-width="1" opacity="0.65" />
   <svg x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" viewBox="0 0 ${plotWidth} ${plotHeight}" preserveAspectRatio="none" aria-hidden="true">${plotMarkup}</svg>
