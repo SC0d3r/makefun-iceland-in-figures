@@ -150,7 +150,7 @@ a {
 }
 
 .overview {
-  padding-top: 40px;
+  padding-top: 34px;
 }
 
 .eyebrow {
@@ -195,7 +195,6 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 2px solid var(--ink);
-  border-bottom: 1px solid var(--rule);
 }
 
 .kpi {
@@ -256,7 +255,7 @@ h1 {
 /* Charts */
 
 .population-figure {
-  margin-top: 30px;
+  margin-top: 26px;
 }
 
 .figure-head {
@@ -672,23 +671,23 @@ h2 {
 }
 
 #data-table th[data-key="name"] {
-  width: 30%;
+  width: 48%;
 }
 
 #data-table th[data-key="group"] {
-  width: 12%;
+  width: 13%;
 }
 
 #data-table th[data-key="value"] {
-  width: 16%;
+  width: 18%;
 }
 
 #data-table th[data-key="unit"] {
-  width: 28%;
+  width: 14%;
 }
 
 #data-table th[data-key="year"] {
-  width: 14%;
+  width: 7%;
 }
 
 .data-table th {
@@ -725,6 +724,7 @@ h2 {
 }
 
 .data-table th.num button {
+  width: 100%;
   justify-content: flex-end;
 }
 
@@ -1097,7 +1097,7 @@ h2 {
 
   .kpi-label {
     min-height: 23px;
-    font-size: 9.5px;
+    font-size: 10px;
     letter-spacing: 0.08em;
     line-height: 1.25;
   }
@@ -1124,8 +1124,8 @@ h2 {
   }
 
   .kpi-source {
-    font-size: 8px;
-    letter-spacing: 0.03em;
+    font-size: 9px;
+    letter-spacing: 0.02em;
     line-height: 1.3;
   }
 

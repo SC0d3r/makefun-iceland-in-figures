@@ -2,7 +2,7 @@
 const COLORS = {
   glacier: "#2f6f86",
   lava: "#a8432a",
-  rule: "#c9c1b0",
+  rule: "#bdb4a1",
   muted: "#6f6a5f",
   ink: "#171a1f",
   paper: "#f3f0e8",
@@ -47,7 +47,7 @@ function plot(points, options) {
   const narrow = width < 480;
   const margin = {
     left: narrow ? 66 : 70,
-    right: options.kind === "line" ? (narrow ? 22 : 46) : (narrow ? 14 : 20),
+    right: options.kind === "line" ? (narrow ? 22 : 24) : (narrow ? 14 : 20),
     top: narrow ? 24 : 26,
     bottom: narrow ? 30 : 34,
   };
@@ -67,8 +67,8 @@ function plot(points, options) {
     ? `M0 ${plotHeight.toFixed(2)} L${coordinates.map(([x, y]) => `${x.toFixed(2)} ${y.toFixed(2)}`).join(" L")} L${plotWidth.toFixed(2)} ${plotHeight.toFixed(2)} Z`
     : "";
 
-  const tickFont = 12.5;
-  const yearFont = 12.5;
+  const tickFont = 13;
+  const yearFont = 13;
   const endpointFont = 14.5;
   const dotRadius = 6;
   const lineWidth = 3;
@@ -87,6 +87,13 @@ function plot(points, options) {
   const [lastX, lastY] = coordinates[coordinates.length - 1];
   const lastValue = points[points.length - 1][1];
   const lastLabel = escapeXml(options.format ? options.format(lastValue) : lastValue);
+  const labelWidth = lastLabel.length * endpointFont * 0.66;
+  const nearbyLineY = Math.max(
+    ...coordinates.filter(([x]) => x >= lastX - labelWidth - 4).map(([, y]) => y),
+    lastY,
+  );
+  const endpointOffset = Math.max(24, nearbyLineY - lastY + 18);
+  const endpointY = lastY + endpointOffset;
   const baseline = margin.top + plotHeight;
   const yearTicks = options.yearTicks ?? [minYear, maxYear];
   const yearLabels = yearTicks.map((year, index) => {
@@ -100,12 +107,12 @@ function plot(points, options) {
     : `<path d="${linePath}" fill="none" stroke="${COLORS.glacier}" stroke-width="${lineWidth}" stroke-linejoin="round" stroke-linecap="round" />`;
 
   return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(options.label ?? "Chart")}">
-  <text x="${margin.left}" y="${margin.top - 6}" text-anchor="start" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
+  <text x="${(margin.left + plotWidth).toFixed(2)}" y="${margin.top - 6}" text-anchor="end" font-size="${tickFont}" letter-spacing="0.08em" fill="${COLORS.muted}">${escapeXml(options.unit ?? "")}</text>
   ${gridlines}
   <line x1="${margin.left}" y1="${baseline.toFixed(2)}" x2="${margin.left + plotWidth}" y2="${baseline.toFixed(2)}" stroke="${COLORS.ink}" stroke-width="1" opacity="0.65" />
   <svg x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" viewBox="0 0 ${plotWidth} ${plotHeight}" preserveAspectRatio="none" aria-hidden="true">${plotMarkup}</svg>
   ${yLabels}
-  <text x="${(lastX + margin.left - 8).toFixed(2)}" y="${(lastY + margin.top - 12).toFixed(2)}" text-anchor="end" font-size="${endpointFont}" font-weight="600" fill="${COLORS.ink}">${lastLabel}</text>
+  <text x="${(lastX + margin.left).toFixed(2)}" y="${(endpointY + margin.top).toFixed(2)}" text-anchor="end" font-size="${endpointFont}" font-weight="600" fill="${COLORS.ink}" paint-order="stroke" stroke="${COLORS.paper}" stroke-width="3" stroke-linejoin="round">${lastLabel}</text>
   <circle cx="${(lastX + margin.left).toFixed(2)}" cy="${(lastY + margin.top).toFixed(2)}" r="${dotRadius}" fill="${COLORS.lava}" stroke="${COLORS.paper}" stroke-width="1.5" />
   ${yearLabels}
 </svg>`;
